@@ -27,6 +27,7 @@ const Int = () => {
         autoPlay
         muted
         loop
+        playsInline
         style={styles.video}
       />
       {showText && (
@@ -40,6 +41,13 @@ const Int = () => {
             0% { opacity: 0; }
             50% { opacity: 1; }
             100% { opacity: 0; }
+          }
+
+          @media (pointer: coarse) {
+            /* Ensure that touch devices do not interact with the video */
+            .video-disable-interaction {
+              pointer-events: none;
+            }
           }
         `}
       </style>
@@ -55,6 +63,7 @@ const styles = {
     width: '100vw',
     backgroundColor: '#000',
     overflow: 'hidden',
+    touchAction: 'none', // Disable touch actions
   },
   video: {
     position: 'absolute',
@@ -63,20 +72,21 @@ const styles = {
     width: '100%',
     height: '100%',
     objectFit: 'cover',
+    zIndex: -1, // Ensure video is behind text
+    pointerEvents: 'none', // Prevent pointer events
   },
   text: {
     position: 'absolute',
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    color: 'black', // White color for better visibility on dark background
-    fontSize: '2rem', // Larger font size
-
-    textShadow: '5px 5px 8px rgba(0, 0, 0, 0.9)', // Enhanced shadow for depth
+    color: '#ffffff', // White color for better visibility on dark background
+    fontSize: '3rem', // Larger font size for better visibility
+    textShadow: '5px 5px 8px rgba(0, 0, 0, 0.7)', // Enhanced shadow for depth
     textAlign: 'center', // Center align text
-    letterSpacing: '2px', // Slightly increased letter spacing for readability
+    letterSpacing: '3px', // Slightly increased letter spacing for readability
     lineHeight: '1.2', // Adjust line height for better spacing
-    animation: 'flash 1s ease-out', // Flash animation
+    animation: 'flash 1.5s ease-out infinite', // Flash animation
     fontFamily: '"Roboto", sans-serif', // Stylish font from Google Fonts
   }
 };
