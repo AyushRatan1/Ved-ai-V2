@@ -34,6 +34,7 @@ const Quotes = () => {
         autoPlay
         loop
         muted
+        playsInline
         style={{
           position: 'absolute',
           top: 0,
@@ -41,7 +42,8 @@ const Quotes = () => {
           width: '100%',
           height: '100%',
           objectFit: 'cover',
-          zIndex: -1
+          zIndex: -1,
+          pointerEvents: 'none' // Prevents any interactions with the video
         }}
       />
       {/* Overlay for better text visibility */}
@@ -62,7 +64,7 @@ const Quotes = () => {
         {/* Top Animation */}
         <Box
           sx={{
-            padding: '40px',
+            padding: { xs: '20px', sm: '40px' }, // Responsive padding
             textAlign: 'center',
             animation: `${fadeInOut} 6s ease-in-out infinite`,
             background: 'linear-gradient(135deg, #4a90e2, #50e3c2)',
@@ -72,7 +74,7 @@ const Quotes = () => {
             zIndex: 1
           }}
         >
-          <Typography variant="h2" component="div" sx={{ fontSize: '2.5rem', fontWeight: 'bold' }}>
+          <Typography variant="h2" component="div" sx={{ fontSize: { xs: '1.5rem', sm: '2.5rem' }, fontWeight: 'bold' }}>
             <Typing
               text={['"Artificial intelligence is the future."', '"Innovation drives progress."', '"The best way to predict the future is to invent it."']}
               speed={100}
@@ -89,12 +91,13 @@ const Quotes = () => {
             value={value}
             onChange={handleChange}
             aria-label="tabs example"
+            orientation={{ xs: 'vertical', sm: 'horizontal' }} // Stack tabs vertically on small screens
             sx={{ 
               borderRadius: '12px',
               boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
               '.MuiTab-root': {
-                margin: '10px',
-                padding: '20px',
+                margin: { xs: '5px', sm: '10px' }, // Responsive margin
+                padding: { xs: '15px', sm: '20px' }, // Responsive padding
                 borderRadius: '12px',
                 transition: 'background-color 0.3s, transform 0.3s, box-shadow 0.3s',
                 cursor: 'pointer',
@@ -116,7 +119,7 @@ const Quotes = () => {
               sx={{
                 color: '#000',
                 backgroundColor: 'rgba(255, 255, 204, 0.8)', // Light yellow
-                fontSize: '1.25rem',
+                fontSize: { xs: '1rem', sm: '1.25rem' }, // Responsive font size
                 fontWeight: 'bold',
               }}
             />
@@ -129,7 +132,7 @@ const Quotes = () => {
               sx={{
                 color: '#000',
                 backgroundColor: 'rgba(173, 216, 230, 0.8)', // Light blue
-                fontSize: '1.25rem',
+                fontSize: { xs: '1rem', sm: '1.25rem' }, // Responsive font size
                 fontWeight: 'bold',
               }}
             />
@@ -142,7 +145,7 @@ const Quotes = () => {
               sx={{
                 color: '#000',
                 backgroundColor: 'rgba(255, 182, 193, 0.8)', // Light pink
-                fontSize: '1.25rem',
+                fontSize: { xs: '1rem', sm: '1.25rem' }, // Responsive font size
                 fontWeight: 'bold',
               }}
             />
