@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // Assuming you use react-router for navigation
+import { useNavigate } from 'react-router-dom';
 
 const Int = () => {
   const [showText, setShowText] = useState(false);
@@ -43,11 +43,9 @@ const Int = () => {
             100% { opacity: 0; }
           }
 
-          @media (pointer: coarse) {
-            /* Ensure that touch devices do not interact with the video */
-            .video-disable-interaction {
-              pointer-events: none;
-            }
+          /* Prevent interaction with the video */
+          .video-disable-interaction {
+            pointer-events: none;
           }
         `}
       </style>
@@ -63,7 +61,6 @@ const styles = {
     width: '100vw',
     backgroundColor: '#000',
     overflow: 'hidden',
-    touchAction: 'none', // Disable touch actions
   },
   video: {
     position: 'absolute',
@@ -72,22 +69,21 @@ const styles = {
     width: '100%',
     height: '100%',
     objectFit: 'cover',
-    zIndex: -1, // Ensure video is behind text
-    pointerEvents: 'none', // Prevent pointer events
+    pointerEvents: 'none', // Prevents any interaction with the video
   },
   text: {
     position: 'absolute',
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    color: '#ffffff', // White color for better visibility on dark background
-    fontSize: '3rem', // Larger font size for better visibility
-    textShadow: '5px 5px 8px rgba(0, 0, 0, 0.7)', // Enhanced shadow for depth
-    textAlign: 'center', // Center align text
-    letterSpacing: '3px', // Slightly increased letter spacing for readability
-    lineHeight: '1.2', // Adjust line height for better spacing
-    animation: 'flash 1.5s ease-out infinite', // Flash animation
-    fontFamily: '"Roboto", sans-serif', // Stylish font from Google Fonts
+    color: 'black', // Adjust color for visibility on your video
+    fontSize: '2rem',
+    textShadow: '5px 5px 8px rgba(0, 0, 0, 0.9)', // Enhanced shadow for depth
+    textAlign: 'center',
+    letterSpacing: '2px',
+    lineHeight: '1.2',
+    animation: 'flash 1s ease-out',
+    fontFamily: '"Roboto", sans-serif',
   }
 };
 

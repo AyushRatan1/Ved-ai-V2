@@ -101,6 +101,9 @@ const Quotes = () => {
                   transform: 'scale(1.05)',
                   boxShadow: '0 6px 15px rgba(0,0,0,0.4)'
                 }
+              },
+              '.MuiTabs-flexContainer': {
+                flexDirection: { xs: 'column', sm: 'row' }, // Change flex direction based on screen size
               }
             }}
           >
