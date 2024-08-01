@@ -28,6 +28,7 @@ const Int = () => {
         muted
         loop
         playsInline
+        controls={false} // Ensure controls are disabled to help with autoplay
         style={styles.video}
       />
       {showText && (
@@ -70,13 +71,14 @@ const styles = {
     height: '100%',
     objectFit: 'cover',
     pointerEvents: 'none', // Prevents any interaction with the video
+    WebkitOverflowScrolling: 'touch' // WebKit-specific style for better touch handling
   },
   text: {
     position: 'absolute',
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    color: 'black', // Adjust color for visibility on your video
+    color: '#fff', // Adjust color for visibility on your video
     fontSize: '2rem',
     textShadow: '5px 5px 8px rgba(0, 0, 0, 0.9)', // Enhanced shadow for depth
     textAlign: 'center',
