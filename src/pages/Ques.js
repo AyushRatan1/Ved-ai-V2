@@ -40,11 +40,12 @@ const Ques = () => {
       {/* Left Side: Video */}
       <Box sx={{ flex: 2, position: 'relative' }}>
         <video
-          src="/vid.mp4" // Correct path
+          src="/vid.mp4" // Ensure this path is correct
           autoPlay
           loop
           muted
           playsInline
+          preload="auto" // Preload the video to ensure it starts quickly
           style={{ 
             width: '100%', 
             height: '100%', 

@@ -13,12 +13,6 @@ const fadeInOut = keyframes`
   100% { opacity: 0; transform: translateY(30px); }
 `;
 
-const hoverEffect = keyframes`
-  0% { transform: scale(1); }
-  50% { transform: scale(1.05); }
-  100% { transform: scale(1); }
-`;
-
 const Quotes = () => {
   const [value, setValue] = useState(0);
 
