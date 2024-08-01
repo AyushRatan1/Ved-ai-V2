@@ -36,3 +36,5 @@
     transform: rotate(360deg);
   }
 }
+/* global.css or in the head of your HTML file */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@700&display=swap');
