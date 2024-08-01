@@ -13,12 +13,6 @@ const fadeInOut = keyframes`
   100% { opacity: 0; transform: translateY(30px); }
 `;
 
-const hoverEffect = keyframes`
-  0% { transform: scale(1); }
-  50% { transform: scale(1.05); }
-  100% { transform: scale(1); }
-`;
-
 const Quotes = () => {
   const [value, setValue] = useState(0);
 
@@ -107,6 +101,9 @@ const Quotes = () => {
                   transform: 'scale(1.05)',
                   boxShadow: '0 6px 15px rgba(0,0,0,0.4)'
                 }
+              },
+              '.MuiTabs-flexContainer': {
+                flexDirection: { xs: 'column', sm: 'row' }, // Change flex direction based on screen size
               }
             }}
           >
