@@ -1,156 +1,211 @@
-import React, { useState } from 'react';
-import Typing from 'react-typing-effect';
-import { Tabs, Tab, Typography, Box } from '@mui/material';
-import { keyframes } from '@emotion/react';
-import SearchIcon from '@mui/icons-material/Search';
-import SummarizeIcon from '@mui/icons-material/Summarize';
-import QuestionAnswerIcon from '@mui/icons-material/QuestionAnswer';
+import React from "react";
+import { Box, Typography, Button, Grid } from "@mui/material";
+import LightbulbIcon from "@mui/icons-material/Lightbulb";
+import WorkIcon from "@mui/icons-material/Work";
+import ExtensionIcon from "@mui/icons-material/Extension";
+import { Link } from "react-router-dom";
 
-// Keyframes for text and tab animations
-const fadeInOut = keyframes`
-  0% { opacity: 0; transform: translateY(-30px); }
-  50% { opacity: 1; transform: translateY(0); }
-  100% { opacity: 0; transform: translateY(30px); }
-`;
-
-const Quotes = () => {
-  const [value, setValue] = useState(0);
-
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
-  };
-
+const Insights = () => {
   return (
-    <Box sx={{ position: 'relative', height: '100vh', overflow: 'hidden', color: '#e0e0e0' }}>
-      {/* Video Background */}
-      <video
-        src="/vid3.mp4" // Replace with your video path
-        autoPlay
-        loop
-        muted
-        playsInline
-        style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
-          objectFit: 'cover',
-          zIndex: -1,
-          pointerEvents: 'none' // Prevents any interactions with the video
-        }}
-      />
-      {/* Overlay for better text visibility */}
-      <Box
+    <Box
+      sx={{
+        minHeight: "100vh",
+        backgroundColor: "#1a1a1a", // Slightly lighter shade for contrast
+        color: "#ffffff",
+        padding: "60px 20px",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      <Typography
+        variant="h3"
         sx={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
-          background: 'rgba(0, 0, 0, 0.4)', // Dark overlay
-          zIndex: 0
+          fontWeight: "bold",
+          marginBottom: "40px",
+          textAlign: "center",
+          textTransform: "uppercase",
+          letterSpacing: "2px",
         }}
-      />
-      
-      {/* Main Content */}
-      <Box sx={{ display: 'flex', flexDirection: 'column', height: '100vh', zIndex: 1 }}>
-        {/* Top Animation */}
-        <Box
-          sx={{
-            padding: { xs: '20px', sm: '40px' }, // Responsive padding
-            textAlign: 'center',
-            animation: `${fadeInOut} 6s ease-in-out infinite`,
-            background: 'linear-gradient(135deg, #4a90e2, #50e3c2)',
-            borderRadius: '0 0 50% 50%',
-            color: '#ffffff',
-            position: 'relative',
-            zIndex: 1
-          }}
-        >
-          <Typography variant="h2" component="div" sx={{ fontSize: { xs: '1.5rem', sm: '2.5rem' }, fontWeight: 'bold' }}>
-            <Typing
-              text={['"Artificial intelligence is the future."', '"Innovation drives progress."', '"The best way to predict the future is to invent it."']}
-              speed={100}
-              eraseSpeed={50}
-              eraseDelay={1000}
-              typingDelay={500}
-            />
-          </Typography>
-        </Box>
+      >
+        AI Insights
+      </Typography>
 
-        {/* Tabs Section */}
-        <Box sx={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
-          <Tabs
-            value={value}
-            onChange={handleChange}
-            aria-label="tabs example"
-            orientation={{ xs: 'vertical', sm: 'horizontal' }} // Stack tabs vertically on small screens
-            sx={{ 
-              borderRadius: '12px',
-              boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
-              '.MuiTab-root': {
-                margin: { xs: '5px', sm: '10px' }, // Responsive margin
-                padding: { xs: '15px', sm: '20px' }, // Responsive padding
-                borderRadius: '12px',
-                transition: 'background-color 0.3s, transform 0.3s, box-shadow 0.3s',
-                cursor: 'pointer',
-                backdropFilter: 'blur(10px)', // Glassy effect
-                '&:hover': {
-                  backgroundColor: 'rgba(255, 255, 255, 0.9)',
-                  transform: 'scale(1.05)',
-                  boxShadow: '0 6px 15px rgba(0,0,0,0.4)'
-                }
+      <Grid container spacing={6} justifyContent="center">
+        <Grid item xs={12} sm={6} md={4}>
+          <Button
+            variant="contained"
+            sx={{
+              width: "100%",
+              backgroundColor: "#2d2d2d",
+              padding: "40px 20px",
+              borderRadius: "12px",
+              textAlign: "center",
+              transition: "transform 0.3s ease, background-color 0.3s ease",
+              "&:hover": {
+                backgroundColor: "#444",
+                transform: "scale(1.05)",
               },
-              '.MuiTabs-flexContainer': {
-                flexDirection: { xs: 'column', sm: 'row' }, // Change flex direction based on screen size
-              }
             }}
+            component={Link}
+            to="https://googlehack-v1.vercel.app/"
           >
-            <Tab
-              label="General Search"
-              icon={<SearchIcon />}
-              iconPosition="start"
-              component="a"
-              href="https://googlehack-v1.vercel.app/"
-              sx={{
-                color: '#000',
-                backgroundColor: 'rgba(255, 255, 204, 0.8)', // Light yellow
-                fontSize: { xs: '1rem', sm: '1.25rem' }, // Responsive font size
-                fontWeight: 'bold',
-              }}
-            />
-            <Tab
-              label="Summarize Content"
-              icon={<SummarizeIcon />}
-              iconPosition="start"
-              component="a"
-              href="/summarize-content"
-              sx={{
-                color: '#000',
-                backgroundColor: 'rgba(173, 216, 230, 0.8)', // Light blue
-                fontSize: { xs: '1rem', sm: '1.25rem' }, // Responsive font size
-                fontWeight: 'bold',
-              }}
-            />
-            <Tab
-              label="Explore with Questions"
-              icon={<QuestionAnswerIcon />}
-              iconPosition="start"
-              component="a"
-              href="/explore-with-questions"
-              sx={{
-                color: '#000',
-                backgroundColor: 'rgba(255, 182, 193, 0.8)', // Light pink
-                fontSize: { xs: '1rem', sm: '1.25rem' }, // Responsive font size
-                fontWeight: 'bold',
-              }}
-            />
-          </Tabs>
-        </Box>
-      </Box>
+            <Box display="flex" flexDirection="column" alignItems="center">
+              <LightbulbIcon fontSize="large" sx={{ color: "#ffd700" }} />
+              <Typography
+                variant="h5"
+                sx={{ marginTop: "15px", fontWeight: "bold" }}
+              >
+                Explore AI
+              </Typography>
+              <Typography
+                variant="body1"
+                sx={{
+                  marginTop: "10px",
+                  color: "#cccccc",
+                  textAlign: "center",
+                }}
+              >
+                Dive deep into AI's latest trends and developments.
+              </Typography>
+              <Button
+                variant="outlined"
+                sx={{
+                  marginTop: "25px",
+                  color: "#ffd700",
+                  borderColor: "#ffd700",
+                  textTransform: "none",
+                  "&:hover": {
+                    borderColor: "#ffffff",
+                    color: "#ffffff",
+                  },
+                }}
+                component={Link}
+                to="https://googlehack-v1.vercel.app/"
+              >
+                Explore AI
+              </Button>
+            </Box>
+          </Button>
+        </Grid>
+
+        <Grid item xs={12} sm={6} md={4}>
+          <Button
+            variant="contained"
+            sx={{
+              width: "100%",
+              backgroundColor: "#2d2d2d",
+              padding: "40px 20px",
+              borderRadius: "12px",
+              textAlign: "center",
+              transition: "transform 0.3s ease, background-color 0.3s ease",
+              "&:hover": {
+                backgroundColor: "#444",
+                transform: "scale(1.05)",
+              },
+            }}
+            component={Link}
+            to="/ai-applications"
+          >
+            <Box display="flex" flexDirection="column" alignItems="center">
+              <ExtensionIcon fontSize="large" sx={{ color: "#00c853" }} />
+              <Typography
+                variant="h5"
+                sx={{ marginTop: "15px", fontWeight: "bold" }}
+              >
+                AI Applications
+              </Typography>
+              <Typography
+                variant="body1"
+                sx={{
+                  marginTop: "10px",
+                  color: "#cccccc",
+                  textAlign: "center",
+                }}
+              >
+                See how AI is used in real-world applications.
+              </Typography>
+              <Button
+                variant="outlined"
+                sx={{
+                  marginTop: "25px",
+                  color: "#00c853",
+                  borderColor: "#00c853",
+                  textTransform: "none",
+                  "&:hover": {
+                    borderColor: "#ffffff",
+                    color: "#ffffff",
+                  },
+                }}
+                component={Link}
+                to="/ai-applications"
+              >
+                Applications
+              </Button>
+            </Box>
+          </Button>
+        </Grid>
+
+        <Grid item xs={12} sm={6} md={4}>
+          <Button
+            variant="contained"
+            sx={{
+              width: "100%",
+              backgroundColor: "#2d2d2d",
+              padding: "40px 20px",
+              borderRadius: "12px",
+              textAlign: "center",
+              transition: "transform 0.3s ease, background-color 0.3s ease",
+              "&:hover": {
+                backgroundColor: "#444",
+                transform: "scale(1.05)",
+              },
+            }}
+            component={Link}
+            to="/ai-business"
+          >
+            <Box display="flex" flexDirection="column" alignItems="center">
+              <WorkIcon fontSize="large" sx={{ color: "#1e88e5" }} />
+              <Typography
+                variant="h5"
+                sx={{ marginTop: "15px", fontWeight: "bold" }}
+              >
+                AI in Business
+              </Typography>
+              <Typography
+                variant="body1"
+                sx={{
+                  marginTop: "10px",
+                  color: "#cccccc",
+                  textAlign: "center",
+                }}
+              >
+                Learn how AI is transforming business processes.
+              </Typography>
+              <Button
+                variant="outlined"
+                sx={{
+                  marginTop: "25px",
+                  color: "#1e88e5",
+                  borderColor: "#1e88e5",
+                  textTransform: "none",
+                  "&:hover": {
+                    borderColor: "#ffffff",
+                    color: "#ffffff",
+                  },
+                }}
+                component={Link}
+                to="/ai-business"
+              >
+                Explore
+              </Button>
+            </Box>
+          </Button>
+        </Grid>
+      </Grid>
     </Box>
   );
 };
 
-export default Quotes;
+export default Insights;
