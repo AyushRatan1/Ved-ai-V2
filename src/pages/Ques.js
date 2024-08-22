@@ -4,16 +4,17 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "./supabaseClient"; // Import the Supabase client
 
 const Ques = () => {
-  const greeting =
-    "Hello friend. I'm excited to help you find interesting ways to learn.";
-  const introduction =
-    "Let's start your journey here — all you gotta do is make a profile. It'll take 60-seconds max, promise.";
-  const question =
-    "Okay, first: what's your name & where are you based? Drop your city + country. (Ex. Hi, I'm Ayush. I'm from Bangalore, India)";
+  const questions = [
+    "Okay, first: what's your name & where are you based? Drop your city + country. (Ex. Hi, I'm Ayush. I'm from Bangalore, India)",
+    "What's your idea? Or if you don't have one yet, what are you curious about exploring? Just a short description, 1-2 sentences.",
+    "Any specific aspect or application you're passionate about?",
+  ];
 
   const [displayedText, setDisplayedText] = useState("");
   const [fullText, setFullText] = useState([]);
   const [answer, setAnswer] = useState("");
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [answers, setAnswers] = useState([]);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const navigate = useNavigate();
 
@@ -29,38 +30,29 @@ const Ques = () => {
   }, []);
 
   useEffect(() => {
-    const textArray = [greeting, introduction, question];
-    let accumulatedText = [];
-
-    const typeLine = (line, callback) => {
-      let currentText = "";
-      let charIndex = 0;
-
-      const typeChar = () => {
-        if (charIndex < line.length) {
-          currentText += line[charIndex];
-          setDisplayedText(currentText);
-          charIndex++;
-          setTimeout(typeChar, 50); // Adjust typing speed here
-        } else {
-          accumulatedText.push(currentText);
-          setFullText([...accumulatedText]);
-          setDisplayedText(""); // Clear displayedText for the next line
-          if (callback) callback();
-        }
-      };
-
-      typeChar();
-    };
-
     const displayText = (index) => {
-      if (index < textArray.length) {
-        typeLine(textArray[index], () => displayText(index + 1));
+      if (index < questions.length) {
+        let currentText = "";
+        let charIndex = 0;
+
+        const typeChar = () => {
+          if (charIndex < questions[index].length) {
+            currentText += questions[index][charIndex];
+            setDisplayedText(currentText);
+            charIndex++;
+            setTimeout(typeChar, 50); // Adjust typing speed here
+          } else {
+            setFullText([...fullText, currentText]);
+            setDisplayedText(""); // Clear displayedText for the next question
+          }
+        };
+
+        typeChar();
       }
     };
 
-    displayText(0);
-  }, []);
+    displayText(currentQuestionIndex);
+  }, [currentQuestionIndex]); // Re-run when the current question index changes
 
   const handleChange = (e) => {
     setAnswer(e.target.value);
@@ -68,25 +60,38 @@ const Ques = () => {
 
   const handleSubmit = async (e) => {
     if (e.key === "Enter" && answer.trim() !== "") {
-      console.log("Submitted Answer:", answer);
-      try {
-        // Insert the answer into the Supabase database
-        const { data, error } = await supabase
-          .from("answers")
-          .insert([{ answer, timestamp: new Date() }]);
-
-        if (error) throw error;
-
-        console.log("Answer saved successfully!", data);
-      } catch (error) {
-        console.error("Error saving answer: ", error);
-      }
-
+      const updatedAnswers = [...answers, answer];
+      setAnswers(updatedAnswers);
       setAnswer("");
-      // Replace '/quotes' with the page you want to redirect to
-      setTimeout(() => {
-        navigate("/quotes");
-      }, 1000);
+
+      if (currentQuestionIndex < questions.length - 1) {
+        setCurrentQuestionIndex(currentQuestionIndex + 1);
+      } else {
+        console.log("All Answers:", updatedAnswers);
+
+        try {
+          // Insert all answers into the Supabase database
+          const { data, error } = await supabase
+            .from("answer2") // Change to your table name
+            .insert(
+              updatedAnswers.map((ans) => ({
+                answer: ans,
+                timestamp: new Date(),
+              }))
+            );
+
+          if (error) throw error;
+
+          console.log("Answers saved successfully!", data);
+        } catch (error) {
+          console.error("Error saving answers: ", error);
+        }
+
+        // Redirect to http://localhost:3000
+        setTimeout(() => {
+          window.location.href = "http://localhost:3000";
+        }, 1000);
+      }
     }
   };
 
