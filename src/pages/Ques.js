@@ -83,9 +83,9 @@ const Ques = () => {
       }
 
       setAnswer("");
-      // Replace '/quotes' with the page you want to redirect to
+      // Redirect to the external URL
       setTimeout(() => {
-        navigate("/quotes");
+        window.location.href = "https://ved-ai-original-production.up.railway.app/";
       }, 1000);
     }
   };
