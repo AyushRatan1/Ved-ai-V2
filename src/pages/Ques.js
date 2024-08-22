@@ -63,42 +63,8 @@ const Ques = () => {
       const updatedAnswers = [...answers, answer];
       setAnswers(updatedAnswers);
       setAnswer("");
-<<<<<<< loc
 
-      if (currentQuestionIndex < questions.length - 1) {
-        setCurrentQuestionIndex(currentQuestionIndex + 1);
-      } else {
-        console.log("All Answers:", updatedAnswers);
 
-        try {
-          // Insert all answers into the Supabase database
-          const { data, error } = await supabase
-            .from("answer2") // Change to your table name
-            .insert(
-              updatedAnswers.map((ans) => ({
-                answer: ans,
-                timestamp: new Date(),
-              }))
-            );
-
-          if (error) throw error;
-
-          console.log("Answers saved successfully!", data);
-        } catch (error) {
-          console.error("Error saving answers: ", error);
-        }
-
-        // Redirect to http://localhost:3000
-        setTimeout(() => {
-          window.location.href = "http://localhost:3000";
-        }, 1000);
-      }
-=======
-      // Redirect to the external URL
-      setTimeout(() => {
-        window.location.href = "https://ved-ai-original-production.up.railway.app/";
-      }, 1000);
->>>>>>> main
     }
   };
 
