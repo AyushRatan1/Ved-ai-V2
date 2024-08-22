@@ -64,6 +64,7 @@ const Ques = () => {
       setAnswers(updatedAnswers);
       setAnswer("");
 
+
     }
   };
 
