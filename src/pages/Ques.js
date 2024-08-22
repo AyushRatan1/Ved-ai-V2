@@ -63,7 +63,6 @@ const Ques = () => {
       const updatedAnswers = [...answers, answer];
       setAnswers(updatedAnswers);
       setAnswer("");
-<<<<<<< loc
 
       if (currentQuestionIndex < questions.length - 1) {
         setCurrentQuestionIndex(currentQuestionIndex + 1);
@@ -93,12 +92,6 @@ const Ques = () => {
           window.location.href = "http://localhost:3000";
         }, 1000);
       }
-=======
-      // Redirect to the external URL
-      setTimeout(() => {
-        window.location.href = "https://ved-ai-original-production.up.railway.app/";
-      }, 1000);
->>>>>>> main
     }
   };
 
