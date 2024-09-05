@@ -5,7 +5,8 @@ import { supabase } from "./supabaseClient"; // Import the Supabase client
 
 const Ques = () => {
   const questions = [
-    "Okay, first: what's your name & where are you based? Drop your city + country. (Ex. Hi, I'm Ayush. I'm from Bangalore, India)",
+    "What's your email address?",
+    "Okay, first: what's your name  (Ex. Hi, I'm Ayush.)",
     "What's your idea? Or if you don't have one yet, what are you curious about exploring? Just a short description, 1-2 sentences.",
     "Any specific aspect or application you're passionate about?",
   ];
@@ -15,8 +16,9 @@ const Ques = () => {
   const [answer, setAnswer] = useState("");
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState([]);
+  const [email, setEmail] = useState(""); // To store the email ID
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  const navigate = useNavigate();
+  const navigate = useNavigate(); // Use navigate for redirect
 
   useEffect(() => {
     const handleMouseMove = (e) => {
@@ -52,7 +54,7 @@ const Ques = () => {
     };
 
     displayText(currentQuestionIndex);
-  }, [currentQuestionIndex]); // Re-run when the current question index changes
+  }, [currentQuestionIndex]);
 
   const handleChange = (e) => {
     setAnswer(e.target.value);
@@ -60,6 +62,10 @@ const Ques = () => {
 
   const handleSubmit = async (e) => {
     if (e.key === "Enter" && answer.trim() !== "") {
+      if (currentQuestionIndex === 0) {
+        setEmail(answer); // Store the email
+      }
+
       const updatedAnswers = [...answers, answer];
       setAnswers(updatedAnswers);
       setAnswer("");
@@ -70,27 +76,23 @@ const Ques = () => {
         console.log("All Answers:", updatedAnswers);
 
         try {
-          // Insert all answers into the Supabase database
-          const { data, error } = await supabase
-            .from("answer2") // Change to your table name
-            .insert(
-              updatedAnswers.map((ans) => ({
-                answer: ans,
-                timestamp: new Date(),
-              }))
-            );
+          const { data, error } = await supabase.from("answers").insert(
+            updatedAnswers.map((ans, index) => ({
+              email: email,
+              answer: ans,
+              question_number: index + 1,
+              timestamp: new Date(),
+            }))
+          );
 
           if (error) throw error;
 
           console.log("Answers saved successfully!", data);
+          // Pass email to the Socials page
+          navigate("/socials", { state: { email } });
         } catch (error) {
           console.error("Error saving answers: ", error);
         }
-
-        // Redirect to http://localhost:3000
-        setTimeout(() => {
-          window.location.href = "http://localhost:3000";
-        }, 1000);
       }
     }
   };
