@@ -9,9 +9,6 @@ function App() {
   return (
     <Router>
       <div className="App">
-        <header className="App-header">
-          <h1>VED AI</h1>
-        </header>
         <Routes>
           <Route path="/" element={<Int />} />
           <Route path="/Ques" element={<Ques />} />
