@@ -5,8 +5,8 @@ import { supabase } from "./supabaseClient"; // Import the Supabase client
 
 const Ques = () => {
   const questions = [
-    "What's your email address?",
-    "Okay, first: what's your name  (Ex. Hi, I'm Ayush.)",
+    "Okay, first: What's your email address?",
+    "And what's your name (Ex:Ace)",
     "What's your idea? Or if you don't have one yet, what are you curious about exploring? Just a short description, 1-2 sentences.",
     "Any specific aspect or application you're passionate about?",
   ];
