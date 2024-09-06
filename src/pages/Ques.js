@@ -4,9 +4,10 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "./supabaseClient"; // Import the Supabase client
 
 const Ques = () => {
+  // Questions to be asked
   const questions = [
     "Okay, first: What's your email address?",
-    "And what's your name (Ex:Ace)",
+    "And what's your name (Ex: Ace)",
     "What's your idea? Or if you don't have one yet, what are you curious about exploring? Just a short description, 1-2 sentences.",
     "Any specific aspect or application you're passionate about?",
   ];
@@ -18,19 +19,20 @@ const Ques = () => {
   const [answers, setAnswers] = useState([]);
   const [email, setEmail] = useState(""); // To store the email ID
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  const navigate = useNavigate(); // Use navigate for redirect
+  const navigate = useNavigate(); // Use navigate for redirection
 
+  // Track mouse position for glow effect
   useEffect(() => {
     const handleMouseMove = (e) => {
       setMousePosition({ x: e.clientX, y: e.clientY });
     };
-
     window.addEventListener("mousemove", handleMouseMove);
     return () => {
       window.removeEventListener("mousemove", handleMouseMove);
     };
   }, []);
 
+  // Typewriter effect for displaying questions one by one
   useEffect(() => {
     const displayText = (index) => {
       if (index < questions.length) {
@@ -56,10 +58,12 @@ const Ques = () => {
     displayText(currentQuestionIndex);
   }, [currentQuestionIndex]);
 
+  // Handle input change for the answer field
   const handleChange = (e) => {
     setAnswer(e.target.value);
   };
 
+  // Handle submission of answers
   const handleSubmit = async (e) => {
     if (e.key === "Enter" && answer.trim() !== "") {
       if (currentQuestionIndex === 0) {
@@ -71,11 +75,12 @@ const Ques = () => {
       setAnswer("");
 
       if (currentQuestionIndex < questions.length - 1) {
-        setCurrentQuestionIndex(currentQuestionIndex + 1);
+        setCurrentQuestionIndex(currentQuestionIndex + 1); // Move to next question
       } else {
         console.log("All Answers:", updatedAnswers);
 
         try {
+          // Save the answers to the Supabase database
           const { data, error } = await supabase.from("answers").insert(
             updatedAnswers.map((ans, index) => ({
               email: email,

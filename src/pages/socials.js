@@ -1,27 +1,26 @@
 import React, { useState, useEffect } from "react";
-import { Box, Typography, IconButton } from "@mui/material";
-import { FaLinkedin, FaGithub, FaTwitter, FaInstagram } from "react-icons/fa";
+import { Box, Typography, IconButton, Button } from "@mui/material";
+import { FaGithub, FaLinkedin, FaTwitter, FaInstagram } from "react-icons/fa";
 import { useLocation } from "react-router-dom";
-import { supabase } from "./supabaseClient"; // Import the Supabase client
+import { supabase } from "./supabaseClient"; // Import Supabase client
 import { keyframes } from "@mui/system";
 
-// Animation for social media buttons
 const pulse = keyframes`
-  0% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.1);
-  }
-  100% {
-    transform: scale(1);
-  }
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+`;
+
+const fadeSlideIn = keyframes`
+  0% { opacity: 0; transform: translateY(20px); }
+  100% { opacity: 1; transform: translateY(0); }
 `;
 
 const Socials = () => {
   const { state } = useLocation();
   const [name, setName] = useState("");
-  const email = state?.email; // Get the email passed from Ques page
+  const [githubConnected, setGithubConnected] = useState(false);
+  const email = state?.email; // Get the email passed from the Ques page
 
   useEffect(() => {
     const fetchName = async () => {
@@ -36,19 +35,13 @@ const Socials = () => {
           .from("answers")
           .select("answer")
           .eq("email", email)
-          .eq("question_number", 2); // Change this to fetch the name from the second question
+          .eq("question_number", 2); // Fetching the name from the second question
 
         if (error) throw error;
 
         if (data.length > 0) {
-          const fullAnswer = data[0].answer;
-          // Assuming the format is "Hi, I'm [Name]. I'm from [City, Country]"
-          const nameMatch = fullAnswer.match(/(\w+)/);
-          if (nameMatch) {
-            setName(nameMatch[1]);
-          } else {
-            console.error("Name extraction did not match expected format.");
-          }
+          const userName = data[0].answer; // Get the name answer
+          setName(userName || ""); // Default to an empty string if no name
         }
       } catch (error) {
         console.error("Error fetching name: ", error);
@@ -57,6 +50,41 @@ const Socials = () => {
 
     fetchName();
   }, [email]);
+
+  const handleGithubConnect = async () => {
+    const { user, session, error } = await supabase.auth.signInWithOAuth({
+      provider: "github",
+    });
+
+    if (error) {
+      console.error("GitHub login error:", error);
+      return;
+    }
+
+    if (session && user) {
+      try {
+        // Save GitHub data to Supabase for this user, linking it by email
+        const { data, error: saveError } = await supabase
+          .from("github_accounts")
+          .upsert({
+            email: email, // Link the GitHub account to the user's email from answers table
+            github_id: user.user_metadata.user_id, // GitHub user ID
+            github_username: user.user_metadata.user_name, // GitHub username
+            github_avatar: user.user_metadata.avatar_url, // GitHub avatar
+          });
+
+        if (saveError) throw saveError;
+
+        setGithubConnected(true);
+      } catch (error) {
+        console.error("Error saving GitHub data:", error);
+      }
+    }
+  };
+
+  const handleSkip = () => {
+    window.location.href = "http://localhost:3000"; // Redirect to localhost:3000
+  };
 
   return (
     <Box
@@ -93,69 +121,111 @@ const Socials = () => {
           zIndex: 1,
         }}
       >
-        <Typography variant="h2" gutterBottom>
-          Hey, {name}! Let's connect your socials
+        <Typography
+          variant="h2"
+          gutterBottom
+          sx={{
+            animation: `${fadeSlideIn} 1.5s ease-out forwards`,
+            display: "inline-block",
+            fontSize: "2.5rem",
+            opacity: 0,
+            "@media (min-width: 600px)": {
+              fontSize: "3.5rem",
+            },
+          }}
+        >
+          {name
+            ? `Hey, ${name}! Let's connect your socials`
+            : "Hey, let's connect your socials"}
         </Typography>
+
         <Box
           sx={{ mt: 4, display: "flex", gap: "20px", justifyContent: "center" }}
         >
+          {/* GitHub Connect Button */}
+          {!githubConnected ? (
+            <IconButton
+              sx={{
+                color: "#FFFFFF", // GitHub color
+                fontSize: "2.5rem",
+                animation: `${pulse} 2s infinite ease-in-out`,
+                "&:hover": {
+                  color: "#FFFFFF",
+                  boxShadow: "0 0 10px rgba(0, 0, 0, 0.5)", // Add a subtle shadow effect
+                },
+              }}
+              onClick={handleGithubConnect}
+            >
+              <FaGithub />
+            </IconButton>
+          ) : (
+            <Typography variant="h6" sx={{ color: "#333", mt: 2 }}>
+              GitHub Connected!
+            </Typography>
+          )}
+
+          {/* Other Social Media Logos */}
           <IconButton
             sx={{
-              color: "#0B0BFF", // LinkedIn color
-              fontSize: "3rem", // Increased size
-              animation: `${pulse} 2s infinite`,
+              color: "#007FFF", // LinkedIn color
+              fontSize: "2.5rem", // Slightly smaller for a cleaner look
+              animation: `${pulse} 2s infinite ease-in-out`,
               "&:hover": {
-                color: "#1A91DA",
-                boxShadow: "0 0 10px rgba(0, 0, 0, 0.5)", // Add a shadow effect
+                color: "#007FFF",
+                boxShadow: "0 0 10px rgba(0, 0, 0, 0.5)", // Add a subtle shadow effect
               },
             }}
-            // Add login functionality here
           >
             <FaLinkedin />
           </IconButton>
           <IconButton
             sx={{
-              color: "#FFFFFF", // GitHub color
-              fontSize: "3rem", // Increased size
-              animation: `${pulse} 2s infinite`,
-              "&:hover": {
-                color: "#FFFFFF",
-                boxShadow: "0 0 10px rgba(0, 0, 0, 0.5)", // Add a shadow effect
-              },
-            }}
-            // Add login functionality here
-          >
-            <FaGithub />
-          </IconButton>
-          <IconButton
-            sx={{
               color: "#1DA1F2", // Twitter color
-              fontSize: "3rem", // Increased size
-              animation: `${pulse} 2s infinite`,
+              fontSize: "2.5rem",
+              animation: `${pulse} 2s infinite ease-in-out`,
               "&:hover": {
                 color: "#1A91DA",
-                boxShadow: "0 0 10px rgba(0, 0, 0, 0.5)", // Add a shadow effect
+                boxShadow: "0 0 10px rgba(0, 0, 0, 0.5)", // Add a subtle shadow effect
               },
             }}
-            // Add login functionality here
           >
             <FaTwitter />
           </IconButton>
           <IconButton
             sx={{
               color: "#E4405F", // Instagram color
-              fontSize: "3rem", // Increased size
-              animation: `${pulse} 2s infinite`,
+              fontSize: "2.5rem",
+              animation: `${pulse} 2s infinite ease-in-out`,
               "&:hover": {
                 color: "#C13584",
-                boxShadow: "0 0 10px rgba(0, 0, 0, 0.5)", // Add a shadow effect
+                boxShadow: "0 0 10px rgba(0, 0, 0, 0.5)", // Add a subtle shadow effect
               },
             }}
-            // Add login functionality here
           >
             <FaInstagram />
           </IconButton>
         </Box>
+
+        {/* Skip Button */}
+        <Button
+          variant="contained"
+          onClick={handleSkip}
+          sx={{
+            mt: 4,
+            backgroundColor: "#ffffff",
+            color: "#121212",
+            fontSize: "1.2rem",
+            padding: "10px 20px",
+            borderRadius: "50px",
+            animation: `${fadeSlideIn} 2s ease-out`,
+            "&:hover": {
+              backgroundColor: "#ddd",
+              boxShadow: "0 0 10px rgba(0, 0, 0, 0.5)",
+            },
+          }}
+        >
+          Skip for now
+        </Button>
       </Box>
     </Box>
   );
