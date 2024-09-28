@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Box, Typography, IconButton, Button } from "@mui/material";
 import { FaGithub, FaLinkedin, FaTwitter, FaInstagram } from "react-icons/fa";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom"; // Import useNavigate
 import { supabase } from "./supabaseClient"; // Import Supabase client
 import { keyframes } from "@mui/system";
 
@@ -20,7 +20,9 @@ const Socials = () => {
   const { state } = useLocation();
   const [name, setName] = useState("");
   const [githubConnected, setGithubConnected] = useState(false);
-  const email = state?.email; // Get the email passed from the Ques page
+  const email = state?.email; // Safely get the email
+
+  const navigate = useNavigate(); // Initialize useNavigate
 
   useEffect(() => {
     const fetchName = async () => {
@@ -30,7 +32,6 @@ const Socials = () => {
       }
 
       try {
-        // Fetch the user's name based on the email ID
         const { data, error } = await supabase
           .from("answers")
           .select("answer")
@@ -63,14 +64,13 @@ const Socials = () => {
 
     if (session && user) {
       try {
-        // Save GitHub data to Supabase for this user, linking it by email
         const { data, error: saveError } = await supabase
           .from("github_accounts")
           .upsert({
-            email: email, // Link the GitHub account to the user's email from answers table
-            github_id: user.user_metadata.user_id, // GitHub user ID
-            github_username: user.user_metadata.user_name, // GitHub username
-            github_avatar: user.user_metadata.avatar_url, // GitHub avatar
+            email: email,
+            github_id: user.user_metadata.user_id,
+            github_username: user.user_metadata.user_name,
+            github_avatar: user.user_metadata.avatar_url,
           });
 
         if (saveError) throw saveError;
@@ -83,7 +83,7 @@ const Socials = () => {
   };
 
   const handleSkip = () => {
-    window.location.href = "http://localhost:3000"; // Redirect to localhost:3000
+    navigate("/profile", { state: { email } });
   };
 
   return (
@@ -146,12 +146,12 @@ const Socials = () => {
           {!githubConnected ? (
             <IconButton
               sx={{
-                color: "#FFFFFF", // GitHub color
+                color: "#FFFFFF",
                 fontSize: "2.5rem",
                 animation: `${pulse} 2s infinite ease-in-out`,
                 "&:hover": {
                   color: "#FFFFFF",
-                  boxShadow: "0 0 10px rgba(0, 0, 0, 0.5)", // Add a subtle shadow effect
+                  boxShadow: "0 0 10px rgba(0, 0, 0, 0.5)",
                 },
               }}
               onClick={handleGithubConnect}
@@ -168,11 +168,11 @@ const Socials = () => {
           <IconButton
             sx={{
               color: "#007FFF", // LinkedIn color
-              fontSize: "2.5rem", // Slightly smaller for a cleaner look
+              fontSize: "2.5rem",
               animation: `${pulse} 2s infinite ease-in-out`,
               "&:hover": {
                 color: "#007FFF",
-                boxShadow: "0 0 10px rgba(0, 0, 0, 0.5)", // Add a subtle shadow effect
+                boxShadow: "0 0 10px rgba(0, 0, 0, 0.5)",
               },
             }}
           >
@@ -185,7 +185,7 @@ const Socials = () => {
               animation: `${pulse} 2s infinite ease-in-out`,
               "&:hover": {
                 color: "#1A91DA",
-                boxShadow: "0 0 10px rgba(0, 0, 0, 0.5)", // Add a subtle shadow effect
+                boxShadow: "0 0 10px rgba(0, 0, 0, 0.5)",
               },
             }}
           >
@@ -198,7 +198,7 @@ const Socials = () => {
               animation: `${pulse} 2s infinite ease-in-out`,
               "&:hover": {
                 color: "#C13584",
-                boxShadow: "0 0 10px rgba(0, 0, 0, 0.5)", // Add a subtle shadow effect
+                boxShadow: "0 0 10px rgba(0, 0, 0, 0.5)",
               },
             }}
           >

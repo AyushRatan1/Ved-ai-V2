@@ -94,7 +94,7 @@ const Ques = () => {
 
           console.log("Answers saved successfully!", data);
           // Pass email to the Socials page
-          navigate("/socials", { state: { email } });
+          navigate("/profile", { state: { email } });
         } catch (error) {
           console.error("Error saving answers: ", error);
         }
