@@ -24,6 +24,7 @@ const Profile = () => {
   const [passwordVisible, setPasswordVisible] = useState(false); // State for text box visibility
   const [snackbarOpen, setSnackbarOpen] = useState(false); // State for Snackbar
   const email = state?.email; // Get the email passed from the Socials page
+  const redirectLink = "https://googlehack-v1.vercel.app/"; // Define your redirect link here
 
   useEffect(() => {
     const fetchProfileData = async () => {
@@ -72,29 +73,28 @@ const Profile = () => {
       return;
     }
 
-    const { error } = await supabase
-      .from("your_table_name") // Replace with your actual table name
-      .update({ passwords: password }) // Ensure the column name is correct
-      .eq("email", email); // Assuming email is the unique identifier
+    try {
+      const { error } = await supabase
+        .from("your_table_name") // Replace with your actual table name
+        .update({ passwords: password }) // Ensure the column name is correct
+        .eq("email", email); // Assuming email is the unique identifier
 
-    if (error) {
+      if (error) {
+        console.error("Error setting password: ", error);
+      } else {
+        alert("Password set successfully!"); // Optional success alert
+      }
+    } catch (error) {
       console.error("Error setting password: ", error);
-      return;
+    } finally {
+      // Redirect to the desired link regardless of success/failure
+      window.location.href = redirectLink;
     }
-
-    setPassword(""); // Clear password input
-    setPasswordVisible(false); // Hide password input box
-    alert("Password set successfully!"); // Optional success alert
-    window.location.href = "http://localhost:3000"; // Redirect after setting password
   };
 
   // Function to handle skip action
   const handleSkip = () => {
-    if (!password) {
-      alert("Please set a password before skipping."); // Alert if password is not set
-    } else {
-      window.location.href = "http://localhost:3000"; // Redirect on skip
-    }
+    window.location.href = redirectLink; // Redirect on skip
   };
 
   return (
@@ -260,47 +260,40 @@ const Profile = () => {
                 sx={{
                   mt: 2,
                   "&:hover": {
-                    backgroundColor: "#3700b3",
-                    transform: "scale(1.05)",
+                    backgroundColor: "#007FFF",
                   },
-                  "&:active": { transform: "scale(0.95)" },
-                  transition: "transform 0.2s ease, background-color 0.2s ease",
                 }}
-                onClick={handleSetPassword} // Set password
+                onClick={handleSetPassword}
               >
                 Confirm Password
               </Button>
             )}
 
-            {/* Skip Button */}
+            {/* Skip for Now Button */}
             <Button
-              variant="outlined"
-              color="inherit"
+              variant="text"
               sx={{
-                mt: 4,
-                borderColor: "#ffffff",
+                mt: 2,
+                textDecoration: "underline", // Underlined skip button
+                color: "#bbb",
                 "&:hover": {
-                  backgroundColor: "#ffffff",
-                  color: "#000000",
-                  transform: "scale(1.05)",
+                  color: "#fff", // White on hover
                 },
-                "&:active": { transform: "scale(0.95)" },
-                transition: "transform 0.2s ease",
               }}
-              onClick={handleSkip} // Skip action
+              onClick={handleSkip} // Redirect on skip
             >
-              Skip for now
+              Skip for Now
             </Button>
           </Box>
         </>
       )}
 
-      {/* Snackbar for error messages */}
+      {/* Snackbar for showing error message */}
       <Snackbar
         open={snackbarOpen}
-        autoHideDuration={6000}
+        autoHideDuration={3000}
         onClose={() => setSnackbarOpen(false)}
-        message="Please set a password."
+        message="Password cannot be empty"
       />
     </Box>
   );
