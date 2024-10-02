@@ -10,21 +10,21 @@ import {
   Snackbar,
 } from "@mui/material";
 import { useLocation } from "react-router-dom";
-import { supabase } from "./supabaseClient"; // Import Supabase client
-import LinkedInIcon from "@mui/icons-material/LinkedIn"; // LinkedIn icon
-import GitHubIcon from "@mui/icons-material/GitHub"; // GitHub icon
-import InstagramIcon from "@mui/icons-material/Instagram"; // Instagram icon
-import { FaLinkedin, FaInstagram } from "react-icons/fa"; // Optional: For animated icons
+import { supabase } from "./supabaseClient";
+import LinkedInIcon from "@mui/icons-material/LinkedIn";
+import GitHubIcon from "@mui/icons-material/GitHub";
+import InstagramIcon from "@mui/icons-material/Instagram";
+import { FaLinkedin, FaInstagram } from "react-icons/fa";
 
 const Profile = () => {
   const { state } = useLocation();
-  const [loading, setLoading] = useState(true); // For preloader
+  const [loading, setLoading] = useState(true);
   const [profileData, setProfileData] = useState(null);
-  const [password, setPassword] = useState(""); // State for password
-  const [passwordVisible, setPasswordVisible] = useState(false); // State for text box visibility
-  const [snackbarOpen, setSnackbarOpen] = useState(false); // State for Snackbar
-  const email = state?.email; // Get the email passed from the Socials page
-  const redirectLink = "https://googlehack-v1.vercel.app/"; // Define your redirect link here
+  const [password, setPassword] = useState("");
+  const [passwordVisible, setPasswordVisible] = useState(false);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const email = state?.email;
+  const redirectLink = "https://googlehack-v1.vercel.app/";
 
   useEffect(() => {
     const fetchProfileData = async () => {
@@ -35,22 +35,18 @@ const Profile = () => {
       }
 
       try {
-        // Fetch the user's name and interests based on the email
-        const { data: nameData, error: nameError } = await supabase
+        const { data: nameData } = await supabase
           .from("answers")
           .select("answer")
           .eq("email", email)
-          .eq("question_number", 2); // Fetching name from question 2
+          .eq("question_number", 2);
 
-        const { data: interestsData, error: interestsError } = await supabase
+        const { data: interestsData } = await supabase
           .from("answers")
           .select("answer")
           .eq("email", email)
-          .eq("question_number", 3); // Fetching interests from question 3
+          .eq("question_number", 3);
 
-        if (nameError || interestsError) throw nameError || interestsError;
-
-        // Extract data and set profile data
         setProfileData({
           name: nameData[0]?.answer || "No Name",
           interests: interestsData[0]?.answer || "No Interests",
@@ -66,35 +62,28 @@ const Profile = () => {
     fetchProfileData();
   }, [email]);
 
-  // Function to handle setting the password
   const handleSetPassword = async () => {
     if (!password) {
-      setSnackbarOpen(true); // Show snackbar if password is empty
+      setSnackbarOpen(true);
       return;
     }
 
     try {
-      const { error } = await supabase
-        .from("your_table_name") // Replace with your actual table name
-        .update({ passwords: password }) // Ensure the column name is correct
-        .eq("email", email); // Assuming email is the unique identifier
+      await supabase
+        .from("your_table_name")
+        .update({ passwords: password })
+        .eq("email", email);
 
-      if (error) {
-        console.error("Error setting password: ", error);
-      } else {
-        alert("Password set successfully!"); // Optional success alert
-      }
+      alert("Password set successfully!");
     } catch (error) {
       console.error("Error setting password: ", error);
     } finally {
-      // Redirect to the desired link regardless of success/failure
       window.location.href = redirectLink;
     }
   };
 
-  // Function to handle skip action
   const handleSkip = () => {
-    window.location.href = redirectLink; // Redirect on skip
+    window.location.href = redirectLink;
   };
 
   return (
@@ -104,7 +93,7 @@ const Profile = () => {
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between",
-        backgroundColor: "#121212",
+        background: "linear-gradient(135deg, #0d0d0d 0%, #1a1a1a 100%)",
         color: "#ffffff",
         padding: "40px",
         overflow: "hidden",
@@ -112,58 +101,55 @@ const Profile = () => {
       }}
     >
       {loading ? (
-        <CircularProgress color="inherit" /> // Preloader animation
+        <CircularProgress color="inherit" />
       ) : (
         <>
-          {/* Profile Card */}
           <Box
             sx={{
-              backgroundColor: "#1F1F1F",
-              padding: "60px", // Increased padding for a larger card
+              backgroundColor: "#101010",
+              padding: "60px",
               borderRadius: "20px",
-              boxShadow: "0 8px 20px rgba(255, 255, 255, 0.5)", // Softer shadow
+              boxShadow: "0 8px 20px rgba(0, 255, 255, 0.5)",
               textAlign: "center",
-              width: "350px", // Width remains the same
-              height: "500px", // Increased height
+              width: "400px",
+              height: "550px",
               transition: "transform 0.3s ease, box-shadow 0.3s ease",
               "&:hover": {
-                transform: "scale(1.05)", // Scale on hover
-                boxShadow: "0 16px 40px rgba(255, 255, 255, 0.3)", // Increase shadow on hover
+                transform: "scale(1.05)",
+                boxShadow: "0 16px 40px rgba(0, 255, 255, 0.7)",
               },
             }}
           >
-            {/* Standard Profile Image */}
             <Avatar
               sx={{
                 width: "200px",
                 height: "200px",
                 margin: "0 auto",
-                border: "2px solid #fff", // Add border to avatar
-                transition: "transform 0.3s ease",
+                border: "3px solid #0ff",
+                transition: "transform 0.5s ease-in-out",
+                animation: "pulse 1.5s infinite",
               }}
-              src="./ava.jpg" // Update with your image path in the public folder
+              src="./ava.jpg"
             />
 
-            {/* User Details */}
-            <Typography variant="h3" sx={{ mt: 2 }}>
+            <Typography variant="h3" sx={{ mt: 2, color: "#0ff" }}>
               {profileData.name}
             </Typography>
-            <Typography variant="subtitle1" sx={{ color: "#bbb", mt: 1 }}>
+            <Typography variant="subtitle1" sx={{ color: "#aaa", mt: 1 }}>
               {profileData.email}
             </Typography>
-            <Typography variant="body1" sx={{ mt: 3 }}>
+            <Typography variant="body1" sx={{ mt: 3, color: "#fff" }}>
               Interests: {profileData.interests}
             </Typography>
           </Box>
 
-          {/* Right Side Content */}
           <Box
             sx={{
               display: "flex",
               flexDirection: "column",
               alignItems: "flex-start",
               justifyContent: "center",
-              ml: 6, // Increased margin to the left for better spacing
+              ml: 6,
               color: "#ffffff",
             }}
           >
@@ -171,7 +157,6 @@ const Profile = () => {
               Let's connect your socials
             </Typography>
 
-            {/* Social Media Options */}
             <Box sx={{ display: "flex", gap: 4 }}>
               <IconButton
                 href="https://www.linkedin.com"
@@ -179,13 +164,13 @@ const Profile = () => {
                 color="inherit"
                 sx={{
                   fontSize: "60px",
-                  animation: "pulse 2s infinite ease-in-out", // Optional: Add pulse effect
                   "&:hover": {
-                    transform: "scale(1.2)", // Scale on hover
+                    transform: "scale(1.2)",
+                    color: "#00ffff",
                   },
                 }}
               >
-                <FaLinkedin style={{ color: "#007FFF", fontSize: "2.5rem" }} />
+                <FaLinkedin style={{ color: "#007FFF", fontSize: "3rem" }} />
               </IconButton>
               <IconButton
                 href="https://github.com"
@@ -193,9 +178,9 @@ const Profile = () => {
                 color="inherit"
                 sx={{
                   fontSize: "60px",
-                  animation: "pulse 2s infinite ease-in-out", // Optional: Add pulse effect
                   "&:hover": {
-                    transform: "scale(1.2)", // Scale on hover
+                    transform: "scale(1.2)",
+                    color: "#00ffff",
                   },
                 }}
               >
@@ -207,52 +192,55 @@ const Profile = () => {
                 color="inherit"
                 sx={{
                   fontSize: "60px",
-                  animation: "pulse 2s infinite ease-in-out", // Optional: Add pulse effect
                   "&:hover": {
-                    transform: "scale(1.2)", // Scale on hover
+                    transform: "scale(1.2)",
+                    color: "#00ffff",
                   },
                 }}
               >
-                <FaInstagram style={{ color: "#E4405F", fontSize: "2.5rem" }} />
+                <FaInstagram
+                  style={{ color: "#E4405F", fontSize: "3rem" }}
+                />
               </IconButton>
             </Box>
 
-            {/* Set Password Button */}
             <Button
               variant="contained"
               color="secondary"
               sx={{
                 mt: 4,
-                backgroundColor: "#FF5722", // Custom color for Set Password button
+                backgroundColor: "#FF5722",
+                animation: "glow 1.5s infinite alternate",
                 "&:hover": {
                   backgroundColor: "#E64A19",
                   transform: "scale(1.05)",
                 },
-                "&:active": { transform: "scale(0.95)" }, // Scale down on click
-                transition: "transform 0.2s ease, background-color 0.2s ease", // Smooth transition for background color and scaling
+                transition: "transform 0.2s ease, background-color 0.2s ease",
               }}
-              onClick={() => setPasswordVisible(!passwordVisible)} // Toggle visibility
+              onClick={() => setPasswordVisible(!passwordVisible)}
             >
               Set Password
             </Button>
 
-            {/* Password Input Field */}
             {passwordVisible && (
               <TextField
                 variant="outlined"
                 type="password"
                 placeholder="Enter your password"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)} // Update password state
+                onChange={(e) => setPassword(e.target.value)}
                 sx={{
                   mt: 2,
-                  width: "250px", // Set the width for the input field
-                  backgroundColor: "#fff", // White background for better visibility
+                  width: "250px",
+                  backgroundColor: "#fff",
+                  borderRadius: "8px",
+                  transform: "translateX(-50px)",
+                  transition: "transform 0.5s ease-in-out",
+                  boxShadow: "0 4px 10px rgba(0, 255, 255, 0.3)",
                 }}
               />
             )}
 
-            {/* Confirm Password Button */}
             {passwordVisible && (
               <Button
                 variant="contained"
@@ -269,32 +257,30 @@ const Profile = () => {
               </Button>
             )}
 
-            {/* Skip for Now Button */}
             <Button
               variant="text"
               sx={{
                 mt: 2,
-                textDecoration: "underline", // Underlined skip button
+                textDecoration: "underline",
                 color: "#bbb",
                 "&:hover": {
-                  color: "#fff", // White on hover
+                  color: "#fff",
                 },
               }}
-              onClick={handleSkip} // Redirect on skip
+              onClick={handleSkip}
             >
-              Skip for Now
+              Skip for now
             </Button>
           </Box>
+
+          <Snackbar
+            open={snackbarOpen}
+            message="Please enter a password"
+            autoHideDuration={3000}
+            onClose={() => setSnackbarOpen(false)}
+          />
         </>
       )}
-
-      {/* Snackbar for showing error message */}
-      <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={3000}
-        onClose={() => setSnackbarOpen(false)}
-        message="Password cannot be empty"
-      />
     </Box>
   );
 };
