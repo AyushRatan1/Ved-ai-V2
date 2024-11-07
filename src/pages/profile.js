@@ -102,7 +102,9 @@ const Profile = () => {
                   transform: "scale(1.05)",
                 },
               }}
-              onClick={() => (window.location.href = "http://localhost:3000")} // Redirects to localhost:3000
+              onClick={() =>
+                (window.location.href = "https://googlehack-v1.vercel.app/")
+              } // Redirects to localhost:3000
             >
               Next
             </Button>
